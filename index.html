@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>电动助力转向的轻便性与路感 · 汽车设计第8章</title>
+  <style>
+:root {
+  color-scheme: light;
+  --ink: #162d3f;
+  --muted: #4e6070;
+  --page: #eef3f6;
+  --panel: #fff;
+  --inset: #f6f9fb;
+  --rule: #ccd9e1;
+  --nav: #132c3c;
+  --teal: #006c65;
+  --teal-soft: #e6f5f1;
+  --orange: #a5450c;
+  --orange-soft: #fff2e4;
+  --blue: #2b5f91;
+  --radius: 15px;
+  font-family: 'Microsoft YaHei UI', 'PingFang SC', 'Noto Sans CJK SC', system-ui, sans-serif;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--page); line-height: 1.6; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid #067e73; outline-offset: 3px; }
+[hidden] { display: none !important; }
+.shell { width: min(1320px, calc(100% - 64px)); margin-inline: auto; }
+.top { background: var(--nav); color: #ecf4f7; }
+.top .shell { display: flex; justify-content: space-between; align-items: center; gap: 12px 20px; min-height: 62px; }
+.brand { font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+.top nav { display: flex; flex-wrap: wrap; gap: 4px; padding: 7px 0; }
+.top nav a, .top nav [aria-current] { display: block; padding: 6px 11px; border-radius: 6px; color: #d4e3ea; font-size: .9rem; text-decoration: none; }
+.top nav a:hover { background: #214658; color: white; }
+.top nav [aria-current] { color: #d5fff2; background: #214f50; font-weight: 700; }
+.top a:focus-visible { outline-color: #9de3d8; }
+.hero { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-block: 30px 23px; }
+.hero .eyebrow { color: var(--teal); font-weight: 700; font-size: .9rem; margin: 0 0 4px; }
+h1 { font-size: clamp(1.75rem,3vw,2.55rem); line-height: 1.2; letter-spacing: -.026em; margin: 0 0 10px; }
+.hero p { margin: 0; color: var(--muted); }
+h2 { margin: 0; font-size: 1.2rem; line-height: 1.35; }
+h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+p { margin: 0; }
+.panel { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--radius); }
+.lab { display: grid; grid-template-columns: minmax(285px, .88fr) minmax(0, 2.35fr); gap: 17px; align-items: start; }
+.lab > *, .learn > * { min-width: 0; }
+.controls { padding: 19px 18px; }
+.controls h2 { margin-bottom: 12px; }
+.controls h3 { margin-bottom: 8px; }
+.note { color: var(--muted); font-size: .875rem; }
+.btn, .pills button { color: var(--ink); background: white; border: 1px solid #b7c9d4; border-radius: 8px; padding: 8px 12px; font-size: .89rem; font-weight: 650; }
+.btn:hover, .pills button:hover { color: var(--teal); border-color: var(--teal); background: #f0faf7; }
+.btn { white-space: nowrap; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pills button[aria-pressed="true"] { color: var(--teal); border-color: #519c91; background: var(--teal-soft); }
+.control { margin-top: 16px; }
+.field-head { display: grid; align-items: center; grid-template-columns: minmax(0,1fr) auto; gap: 7px; }
+.field-head label { font-weight: 700; font-size: .88rem; line-height: 1.35; }
+.number-box { display: inline-flex; align-items: center; justify-content: end; gap: 5px; }
+.number-box [data-number] { width: 4.6rem; padding: 4px 6px; border: 1px solid #bcced8; border-radius: 6px; color: var(--ink); background: var(--inset); text-align: end; font-variant-numeric: tabular-nums; }
+.number-box span { font-size: .77rem; color: var(--muted); white-space: nowrap; }
+[data-range] { display: block; width: 100%; margin: 9px 0 0; accent-color: var(--teal); cursor: pointer; }
+.range-notes { display: flex; justify-content: space-between; font-size: .75rem; color: var(--muted); line-height: 1.4; }
+.subpanel { margin-top: 16px; border-top: 1px solid var(--rule); padding-top: 14px; }
+.readout { padding: 17px 18px 15px; }
+.metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin: 0 0 16px; }
+.metric { background: var(--inset); border: 1px solid var(--rule); border-top: 3px solid #92b6c2; padding: 11px 12px 10px; border-radius: 9px; }
+.metric.primary { background: var(--teal-soft); border-color: #b4d8ce; border-top-color: var(--teal); }
+.metric dt { color: var(--muted); font-weight: 650; font-size: .85rem; line-height: 1.35; }
+.metric dd { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 5px; margin: 6px 0 0; font-variant-numeric: tabular-nums; font-size: clamp(1.2rem,2.6vw,1.85rem); line-height: 1.12; font-weight: 790; overflow-wrap: anywhere; }
+.metric dd small { color: var(--muted); font-size: .75rem; font-weight: 650; }
+.metric .compact { font-size: clamp(1.03rem, 2vw, 1.34rem); }
+.chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 5px 12px; flex-wrap: wrap; }
+.chart-head h2 { font-size: 1.08rem; }
+.chart-head .note { text-align: end; }
+.chart-frame { position: relative; margin-top: 7px; background: #fdfeff; border: 1px solid var(--rule); border-radius: 9px; height: 350px; overflow: hidden; }
+.chart-frame canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
+.chart-frame canvas[data-clickable] { cursor: crosshair; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 8px; color: var(--muted); font-size: .875rem; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--color, var(--teal)); }
+.swatch.dashed { border-top-style: dashed; }
+.chart-notes { margin: 9px 0 0; color: var(--muted); font-size: .875rem; }
+.status { margin-top: 12px; padding: 9px 11px; color: var(--ink); background: var(--inset); border: 1px solid var(--rule); border-radius: 8px; font-size: .9rem; }
+.status strong { color: var(--teal); }
+.force-rows { margin-top: 13px; display: grid; gap: 8px; }
+.force-head { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: .84rem; font-variant-numeric: tabular-nums; }
+.load-bar { height: 10px; margin-top: 4px; background: #e4edf1; border-radius: 5px; overflow: hidden; display: flex; }
+.load-bar .driver { background: #13786f; }
+.load-bar .motor { background: #d1781d; }
+.tablescroll { overflow-x: auto; margin-top: 11px; border: 1px solid var(--rule); border-radius: 9px; }
+table { width: 100%; border-collapse: collapse; font-size: .875rem; font-variant-numeric: tabular-nums; }
+th, td { padding: 8px 9px; text-align: start; vertical-align: middle; }
+thead { color: var(--muted); background: var(--inset); }
+tbody tr + tr { border-top: 1px solid var(--rule); }
+tbody th { font-weight: 700; }
+tr.current { background: var(--teal-soft); }
+.speed-library { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 5px; margin-top: 7px; }
+.speed-library button { display: grid; justify-items: center; padding: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.speed-library i { width: 17px; margin-bottom: 3px; border-top: 3px solid var(--color); }
+.mode-buttons button { flex: 1; padding-inline: 6px; white-space: nowrap; }
+.zone-key { display: grid; grid-template-columns: repeat(3,1fr); color: var(--muted); font-size: .84rem; margin-top: 9px; gap: 5px; }
+.zone-key span { padding: 6px; text-align: center; border-radius: 6px; background: #f0f3f6; }
+.zone-key b { color: var(--teal); }
+.zone-key [data-selected="true"] { background: var(--teal-soft); color: var(--ink); box-shadow: inset 0 0 0 1px #7cb7ac; }
+.learn { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 17px; margin-block: 17px; }
+.learn > .panel { padding: 17px 18px; }
+.learn h2 { margin-bottom: 8px; font-size: 1.09rem; }
+.math { padding: 8px 11px; border-inline-start: 3px solid #69a9a0; background: var(--inset); margin-block: 8px; line-height: 1.65; overflow-wrap: anywhere; }
+.math div + div { margin-top: 3px; }
+.learn .note + .note { margin-top: 8px; }
+summary { cursor: pointer; color: var(--ink); padding-block: 8px; }
+details + details { border-top: 1px solid var(--rule); }
+details p { padding: 0 0 8px 17px; }
+footer { color: var(--muted); margin: 0 0 22px; font-size: .83rem; }
+@media (max-width: 1010px) {
+  .shell { width: calc(100% - 38px); }
+  .lab { grid-template-columns: minmax(240px, .77fr) minmax(0, 1.5fr); gap: 12px; }
+  .controls, .readout { padding-inline: 13px; }
+}
+@media (max-width: 760px) {
+  .shell { width: calc(100% - 24px); }
+  .top .shell { align-items: start; gap: 1px; flex-direction: column; padding-top: 9px; }
+  .top nav { padding: 4px 0 8px; }
+  .top nav a, .top nav [aria-current] { padding-inline: 7px; font-size: .83rem; }
+  .hero { align-items: start; margin-block: 18px 13px; flex-direction: column; gap: 11px; }
+  .lab, .learn { grid-template-columns: minmax(0,1fr); }
+  .controls h2 { margin-bottom: 8px; }
+  .chart-frame { height: 288px; }
+  .metrics { gap: 5px; }
+  .metric { padding: 8px 6px; }
+  .metric dt { font-size: .78rem; }
+  .chart-head .note { text-align: start; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <div class="top"><div class="shell">
+    <span class="brand">《汽车设计》 · 第8章 转向系统设计</span>
+    <nav aria-label="电动助力转向教学工具"><span aria-current="page">轻便性与路感</span>
+<a href="8.5-%E7%9B%B4%E7%BA%BF%E5%9E%8B%E5%8A%A9%E5%8A%9B%E7%89%B9%E6%80%A7-%E5%9B%BE8-44%E4%B8%8E%E5%9B%BE8-45.html">直线型助力</a>
+<a href="8.5-%E8%BD%A6%E9%80%9F%E6%84%9F%E5%BA%94%E5%9E%8B%E5%8A%A9%E5%8A%9B%E7%89%B9%E6%80%A7-%E5%9B%BE8-46.html">车速感应型助力</a></nav>
+  </div></div>
+  <main class="shell">
+    <header class="hero">
+      <div><p class="eyebrow">电动助力转向（EPS） · 式（8-41）至（8-48）</p><h1>电动助力转向的轻便性与路感</h1><p>固定齿条负载，调整助力增益，分别读取转向需要的力矩和路面扰动传回手轮的力矩。</p></div>
+      <button type="button" class="btn" id="reset">恢复初始值</button>
+    </header>
+    <div class="lab">
+      <aside class="panel controls" aria-label="试验设置"><h2>试验设置</h2>
+<div class="pills" aria-label="助力增益预设">
+  <button type="button" data-gain="0" aria-pressed="false">无助力</button>
+  <button type="button" data-gain="2.5" aria-pressed="true">适度助力</button>
+  <button type="button" data-gain="6" aria-pressed="false">强助力</button>
+</div><div class="control">
+  <div class="field-head">
+    <label id="gain-label" for="gain">助力增益 H</label>
+    <span class="number-box"><input type="number" data-number id="gain-number" aria-labelledby="gain-label" min="0" max="8" step="0.1" value="2.5"></span>
+  </div>
+  <input type="range" data-range id="gain" min="0" max="8" step="0.1" value="2.5">
+  <div class="range-notes" aria-hidden="true"><span>0</span><span>8</span></div>
+</div><div class="control">
+  <div class="field-head">
+    <label id="load-label" for="load">齿条负载 F</label>
+    <span class="number-box"><input type="number" data-number id="load-number" aria-labelledby="load-label" min="0" max="5" step="0.05" value="2.5"><span>kN</span></span>
+  </div>
+  <input type="range" data-range id="load" min="0" max="5" step="0.05" value="2.5">
+  <div class="range-notes" aria-hidden="true"><span>0</span><span>5</span></div>
+</div><div class="control">
+  <div class="field-head">
+    <label id="pulse-label" for="pulse">负载增量 ΔF</label>
+    <span class="number-box"><input type="number" data-number id="pulse-number" aria-labelledby="pulse-label" min="0" max="1" step="0.05" value="0.4"><span>kN</span></span>
+  </div>
+  <input type="range" data-range id="pulse" min="0" max="1" step="0.05" value="0.4">
+  <div class="range-notes" aria-hidden="true"><span>0</span><span>1</span></div>
+</div><div class="control">
+  <div class="field-head">
+    <label id="travel-label" for="travel">主动齿轮每转齿条行程 i<sub>ω</sub></label>
+    <span class="number-box"><input type="number" data-number id="travel-number" aria-labelledby="travel-label" min="30" max="70" step="1" value="48"><span>mm/转</span></span>
+  </div>
+  <input type="range" data-range id="travel" min="30" max="70" step="1" value="48">
+  <div class="range-notes" aria-hidden="true"><span>30</span><span>70</span></div>
+</div><p class="note subpanel">同一齿条负载下比较手力。用同一负载增量观察方向盘反馈。</p></aside>
+      <section class="panel readout" aria-label="实时仿真结果"><dl class="metrics"><div class="metric primary"><dt>转向盘力矩 M<sub>h</sub></dt><dd><span id="hand">—</span><small>N·m</small></dd></div>
+<div class="metric"><dt>当量路感 E<sub>d</sub></dt><dd><span id="relative">—</span></dd></div>
+<div class="metric"><dt>方向盘力矩增量 ΔM<sub>h</sub></dt><dd><span id="return">—</span><small>N·m</small></dd></div></dl><div class="chart-head"><h2>齿条负载如何传到转向盘</h2><p class="note">点击图中横坐标更换齿条负载</p></div>
+<div class="chart-frame"><canvas id="graph" role="img" aria-label="齿条负载与转向盘力矩关系，比较无助力和当前增益。"></canvas></div><div class="legend" aria-label="曲线图例">
+  <span><i class="swatch dashed" style="--color:#5b7388"></i>无助力</span>
+  <span><i class="swatch" style="--color:#00756d"></i>当前助力</span>
+  <span><i class="swatch" style="--color:#b85213"></i>从 F 增加到 F＋ΔF</span>
+</div>
+<div class="force-rows" aria-label="同一负载下的力矩分担">
+  <div><div class="force-head"><span>驾驶员与电机分担</span><span id="split-number">—</span></div>
+    <div class="load-bar" id="split" role="img" aria-label="力矩分担"><span class="driver" id="driver-share"></span><span class="motor" id="motor-share"></span></div>
+  </div>
+</div>
+<p class="status" id="feel-status" role="status"></p></section>
+    </div>
+    <section class="learn">
+  <article class="panel"><h2>力矩平衡与路感强度</h2><div class="math">
+  <div>r<sub>p</sub> = i<sub>ω</sub>/(2π)，<span id="radius">—</span> mm</div>
+  <div>M<sub>z</sub> = Fr<sub>p</sub> = M<sub>h</sub> ＋ M<sub>a</sub></div>
+  <div>H = dM<sub>a</sub>/dM<sub>h</sub>，E = dM<sub>h</sub>/dF = r<sub>p</sub>/(1＋H)</div>
+  <div>E<sub>d</sub> = E/r<sub>p</sub> = 1/(1＋H)</div>
+</div>
+<p class="note">E 表示单位齿条力变化引起的方向盘力矩变化。E<sub>d</sub> 用同一转向器无助力时的变化量为基准。这里用通过原点的比例模型 M<sub>a</sub>＝HM<sub>h</sub> 考察准静态反馈。</p></article>
+  <article class="panel"><h2>课堂探究</h2><details><summary>保持齿条负载和扰动不变，把 H 从 0 调到 6。哪两项一起变小？</summary>
+  <p class="note">转向盘持续力矩 M<sub>h</sub> 与扰动带来的增量 ΔM<sub>h</sub> 都变为无助力时的 1/7。手力减小，传给驾驶员的齿条负载变化也变小。</p></details>
+<details><summary>固定 H，只增加齿条行程 i<sub>ω</sub>。E 和 E<sub>d</sub> 各怎样变？</summary>
+  <p class="note">主动齿轮半径增大，绝对路感强度 E 随之增加。E<sub>d</sub> 是相对无助力基准的比值，仍由 H 决定。</p></details>
+<details><summary>能否让手轮力矩不超过 6 N·m，同时保留至少 25% 的当量路感？</summary>
+  <p class="note">在 F＝2.50 kN、i<sub>ω</sub>＝48 mm/转时，按模拟读数或手算得到约 2.18≤H≤3。改大 F 后再检查还能否同时满足两项要求。</p></details></article>
+</section>
+    <footer>《汽车设计》第5版 · 印刷第284–285页 · 齿轮齿条式转向器</footer>
+  </main>
+  <script>
+'use strict';
+
+const byId = id => document.getElementById(id);
+const clip = (value, min, max) => Math.max(min, Math.min(max, value));
+const text = (id, value) => { byId(id).textContent = value; };
+const fmt = (value, digits = 2) => (Math.abs(value) < 0.5 * 10**-digits ? 0 : value).toFixed(digits).replace('-', '−');
+const percent = (part, digits = 1) => `${fmt(100 * part, digits)}%`;
+const value = id => byId(id).valueAsNumber;
+const colors = { teal: '#00756d', orange: '#b85213', slate: '#5b7388', ink: '#162d3f' };
+
+function setControl(id, next) {
+  const range = byId(id);
+  range.value = String(clip(next, Number(range.min), Number(range.max)));
+  byId(`${id}-number`).value = range.value;
+}
+
+function setControls(values) {
+  Object.entries(values).forEach(([id, next]) => setControl(id, next));
+}
+
+function bindControls(update) {
+  for (const range of document.querySelectorAll('[data-range]')) {
+    const number = byId(`${range.id}-number`);
+    range.addEventListener('input', () => {
+      number.value = range.value;
+      update();
+    });
+    number.addEventListener('input', () => {
+      const next = number.valueAsNumber;
+      if (Number.isFinite(next) && next >= Number(range.min) && next <= Number(range.max)) {
+        range.value = number.value;
+        update();
+      }
+    });
+    number.addEventListener('change', () => {
+      setControl(range.id, Number.isFinite(number.valueAsNumber) ? number.valueAsNumber : range.valueAsNumber);
+      update();
+    });
+  }
+}
+
+function paint(canvas, spec) {
+  const {clientWidth: width, clientHeight: height} = canvas;
+  if (!width || !height) return null;
+  const dpr = Math.min(window.devicePixelRatio || 1, 3);
+  const pxWidth = Math.round(width*dpr), pxHeight = Math.round(height*dpr);
+  if (canvas.width !== pxWidth || canvas.height !== pxHeight) {
+    canvas.width = pxWidth;
+    canvas.height = pxHeight;
+  }
+  const c = canvas.getContext('2d');
+  c.setTransform(pxWidth/width, 0, 0, pxHeight/height, 0, 0);
+  c.clearRect(0, 0, width, height);
+  const {xmin,xmax,ymin,ymax} = spec;
+  const left = width < 410 ? 43 : 55, right = width - 17;
+  const top = 34, bottom = height - 53;
+  const x = v => left+(v-xmin)/(xmax-xmin)*(right-left);
+  const y = v => bottom-(v-ymin)/(ymax-ymin)*(bottom-top);
+  const line = (ax,ay,bx,by) => { c.beginPath(); c.moveTo(ax,ay); c.lineTo(bx,by); c.stroke(); };
+
+  c.save();
+  c.beginPath();
+  c.rect(left, top, right-left, bottom-top);
+  c.clip();
+  for (const band of spec.bands ?? []) {
+    c.fillStyle = band.color;
+    c.fillRect(x(band.from),top,x(band.to)-x(band.from),bottom-top);
+  }
+  c.strokeStyle = '#e0e8ee';
+  c.lineWidth = 1;
+  for (const v of spec.xticks) line(x(v),top,x(v),bottom);
+  for (const v of spec.yticks) line(left,y(v),right,y(v));
+  for (const mark of spec.guides ?? []) {
+    c.setLineDash(mark.dash ?? [4,4]);
+    c.strokeStyle = mark.color ?? '#7b919f';
+    line(x(mark.x),top,x(mark.x),bottom);
+  }
+  for (const series of spec.series) {
+    c.strokeStyle = series.color;
+    c.setLineDash(series.dash ?? []);
+    c.lineWidth = series.width ?? 2;
+    c.lineJoin = 'round';
+    c.beginPath();
+    series.points.forEach(([xs,ys], i) => i ? c.lineTo(x(xs),y(ys)) : c.moveTo(x(xs),y(ys)));
+    c.stroke();
+  }
+  c.restore();
+
+  c.lineWidth = 1;
+  c.strokeStyle = '#7690a1';
+  line(left,top,left,bottom);
+  line(left,bottom,right,bottom);
+  if (xmin < 0 && xmax > 0) line(x(0),top,x(0),bottom);
+  c.font = `12px 'Microsoft YaHei UI',system-ui,sans-serif`;
+  c.fillStyle = '#4e6070';
+  c.textBaseline = 'middle';
+  c.textAlign = 'right';
+  for (const v of spec.yticks) c.fillText(fmt(v, 0),left-8,y(v));
+  c.textAlign = 'center';
+  for (const v of spec.xticks) c.fillText(fmt(v, 0),x(v),bottom+14);
+  c.font = `600 12px 'Microsoft YaHei UI',system-ui,sans-serif`;
+  c.fillStyle = colors.ink;
+  c.textAlign = 'left';
+  c.fillText(spec.ylabel,left,16);
+  c.textAlign = 'right';
+  c.fillText(spec.xlabel,right,height-12);
+  for (const mark of spec.markers ?? []) {
+    c.beginPath();
+    c.arc(x(mark.x),y(mark.y),5,0,2*Math.PI);
+    c.fillStyle = '#fff';
+    c.fill();
+    c.lineWidth = 2.5;
+    c.strokeStyle = mark.color;
+    c.stroke();
+  }
+  return {left,right,top,bottom,xmin,xmax};
+}
+
+function plot(id, createSpec, onPick) {
+  const canvas = byId(id);
+  let geometry;
+  const draw = () => { geometry = paint(canvas, createSpec()); };
+  new ResizeObserver(draw).observe(canvas.parentElement);
+  if (onPick) {
+    canvas.dataset.clickable = '';
+    canvas.addEventListener('click', event => {
+      const {left,right,top,bottom,xmin,xmax} = geometry;
+      const box = canvas.getBoundingClientRect();
+      const x = event.clientX-box.left, y = event.clientY-box.top;
+      if (x >= left && x <= right && y >= top && y <= bottom) onPick(xmin+(x-left)/(right-left)*(xmax-xmin));
+    });
+  }
+  return draw;
+}
+
+function ticks(min, max, step) {
+  return Array.from({length: Math.round((max-min)/step)+1}, (_,i) => min+i*step);
+}
+
+function operatingPoint() {
+  const H = value('gain');
+  const force = value('load');
+  const pulse = value('pulse');
+  const radius = value('travel')/(2*Math.PI);
+  const relative = 1/(1+H);
+  const E = radius*relative;
+  const total = force*radius;
+  return { H, force, pulse, radius, relative, E, total,
+    hand: force*E, assist: total-force*E, feedback: pulse*E };
+}
+
+const draw = plot('graph', () => {
+  const p = operatingPoint();
+  const limit = 6;
+  const yMax = Math.ceil(limit*p.radius/10)*10;
+  const next = p.force+p.pulse;
+  return { xmin: 0, xmax: limit, ymin: 0, ymax: yMax, xticks: ticks(0,limit,1), yticks: ticks(0,yMax,10),
+    xlabel: '齿条负载 F（kN）', ylabel: '转向盘力矩 Mₕ（N·m）',
+    bands: [{from:p.force,to:next,color:'#fff1e2'}],
+    guides: [{x:p.force,color:colors.teal}, {x:next,color:colors.orange}],
+    series: [
+      {points:[[0,0],[limit,limit*p.radius]], color:colors.slate, dash:[6,4], width:2},
+      {points:[[0,0],[limit,limit*p.E]], color:colors.teal, width:3},
+      {points:[[p.force,p.hand],[next,next*p.E]], color:colors.orange, width:4},
+    ],
+    markers: [{x:p.force,y:p.hand,color:colors.teal}, {x:next,y:next*p.E,color:colors.orange}]
+  };
+}, selected => {
+  setControl('load', selected);
+  update();
+});
+
+function update() {
+  const p = operatingPoint();
+  text('hand',fmt(p.hand));
+  text('relative',percent(p.relative));
+  text('return',fmt(p.feedback));
+  text('radius',fmt(p.radius));
+  const label = `驾驶员 ${fmt(p.hand)} · 电机 ${fmt(p.assist)} N·m`;
+  text('split-number',label);
+  byId('split').setAttribute('aria-label',label);
+  byId('driver-share').style.width = percent(p.relative,3);
+  byId('motor-share').style.width = percent(1-p.relative,3);
+  text('feel-status', `同一负载无助力时手轮需 ${fmt(p.total)} N·m。当前 E＝${fmt(p.E,3)} N·m/kN，ΔF＝${fmt(p.pulse)} kN 时，手轮力矩增加 ${fmt(p.feedback)} N·m。`);
+  document.querySelectorAll('[data-gain]').forEach(button => button.setAttribute('aria-pressed', Number(button.dataset.gain) === p.H));
+  draw();
+}
+
+document.querySelectorAll('[data-gain]').forEach(button => button.addEventListener('click', () => {
+  setControl('gain', Number(button.dataset.gain));
+  update();
+}));
+byId('reset').addEventListener('click', () => {
+  setControls({gain:2.5,load:2.5,pulse:0.4,travel:48});
+  update();
+});
+bindControls(update);
+update();
+  </script>
+<script>
+/* 防右键与查看源代码快捷键 */
+(function(){
+  document.addEventListener('contextmenu',function(e){e.preventDefault();});
+  document.addEventListener('keydown',function(e){
+    var k=(e.key||'').toLowerCase();
+    if(e.key==='F12'||
+       (e.ctrlKey&&k==='u')||
+       (e.ctrlKey&&k==='s')||
+       (e.ctrlKey&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))||
+       (e.metaKey&&e.altKey&&(k==='i'||k==='j'||k==='c'||k==='u'))||
+       (e.metaKey&&k==='u')||(e.metaKey&&k==='s')){
+      e.preventDefault();e.stopPropagation();return false;
+    }
+  },true);
+})();
+</script>
+</body>
+</html>
